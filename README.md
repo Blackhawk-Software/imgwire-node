@@ -26,6 +26,7 @@ const image = await client.images.upload({
 });
 
 console.log(image.id);
+console.log(image.url({ preset: "thumbnail" }));
 ```
 
 ## Client Setup
@@ -73,6 +74,8 @@ The current handwritten SDK surface exposes these grouped resources:
 
 Image operations and upload workflows.
 
+Returned image records expose `image.url(...)` so your backend can generate imgwire transformation URLs without reimplementing CDN path and query rules.
+
 Supported methods:
 
 - `list({ limit, page })`
@@ -112,6 +115,7 @@ Iterate every image record:
 ```ts
 for await (const image of client.images.listAll({ limit: 100 })) {
   console.log(image.id);
+  console.log(image.url({ preset: "small" }));
 }
 ```
 
@@ -119,6 +123,11 @@ Retrieve an image by id:
 
 ```ts
 const image = await client.images.retrieve("img_123");
+
+const transformedUrl = image.url({
+  width: 300,
+  height: 300
+});
 ```
 
 Create a standard upload intent directly:
@@ -151,6 +160,13 @@ import fs from "node:fs";
 const image = await client.images.upload({
   file: fs.createReadStream("hero.jpg"),
   mimeType: "image/jpeg"
+});
+
+const transformedUrl = image.url({
+  width: 1200,
+  height: 800,
+  format: "webp",
+  quality: 80
 });
 ```
 
@@ -284,8 +300,8 @@ const stats = await client.metrics.getStats({
 - List endpoints exposed through handwritten wrappers return `{ data, pagination }`.
 - `listPages()` yields paginated result objects across pages.
 - `listAll()` yields individual items across every page.
-- Single-resource methods return the deserialized model object from the generated client.
-- Upload helpers return the created `ImageSchema` after the presigned upload completes.
+- Image-returning methods return image records extended with `url(...)` for transformation URL generation.
+- Upload helpers return the created image record after the presigned upload completes.
 
 ## Development
 
