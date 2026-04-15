@@ -163,6 +163,15 @@ describe("ImgwireClient", () => {
       const deleted = await client.images.delete("img_123");
 
       expect(image.id).toBe("img_123");
+      expect(
+        image.url({
+          preset: "thumbnail",
+          width: 150,
+          height: 150
+        })
+      ).toBe(
+        "https://cdn.imgwire.dev/example.png@thumbnail?height=150&width=150"
+      );
       expect(uploadToken.id).toBe("ut_123");
       expect(uploadToken.token).toBe("ut_token_123");
       expect(downloadJob.id).toBe("job_123");
@@ -218,6 +227,11 @@ describe("ImgwireClient", () => {
       );
 
       expect(created.image.id).toBe("img_123");
+      expect(
+        created.image.url({
+          rotate: 90
+        })
+      ).toBe("https://cdn.imgwire.dev/example.png?rotate=90");
     });
 
     it("uploads a Buffer through the standard upload workflow", async () => {
@@ -271,6 +285,12 @@ describe("ImgwireClient", () => {
       });
 
       expect(image.id).toBe("img_123");
+      expect(
+        image.url({
+          preset: "thumbnail",
+          rotate: 90
+        })
+      ).toBe("https://cdn.imgwire.dev/example.png@thumbnail?rotate=90");
       expect(requests).toHaveLength(2);
       expect(requests[0]?.body).toContain('"file_name":"hero.png"');
       expect(requests[0]?.body).toContain('"content_length":4');

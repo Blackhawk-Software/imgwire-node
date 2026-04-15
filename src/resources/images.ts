@@ -6,6 +6,7 @@ import type { StandardUploadCreateSchema } from "../../generated/model/standardU
 import type { StandardUploadResponseSchema } from "../../generated/model/standardUploadResponseSchema.ts";
 import { ImagesApi } from "../../generated/api/imagesApi.ts";
 import type { UploadTokenCreateResponseSchema } from "../../generated/model/uploadTokenCreateResponseSchema.ts";
+import { extendImage, type ImgwireImage } from "../images/url-builder.ts";
 import {
   iteratePaginatedItems,
   iteratePaginatedResults
@@ -20,6 +21,13 @@ import type { UploadInput } from "../uploads/types.ts";
 import type { ImgwireClientOptions } from "../client/types.ts";
 
 import { BaseResource, type ResourceContext } from "./shared.ts";
+
+export type StandardUploadResponse = Omit<
+  StandardUploadResponseSchema,
+  "image"
+> & {
+  image: ImgwireImage;
+};
 
 export class ImagesResource extends BaseResource {
   private readonly api: ImagesApi;
@@ -50,10 +58,10 @@ export class ImagesResource extends BaseResource {
     options?: {
       uploadToken?: string;
     }
-  ): Promise<StandardUploadResponseSchema> {
+  ): Promise<StandardUploadResponse> {
     return this.unwrap("images.create", () =>
       this.api.imagesCreate(input, options?.uploadToken)
-    );
+    ).then(extendStandardUploadResponse);
   }
 
   createBulkDownloadJob(
@@ -77,15 +85,18 @@ export class ImagesResource extends BaseResource {
   list(input?: {
     limit?: number;
     page?: number;
-  }): Promise<PaginatedResult<ImageSchema>> {
+  }): Promise<PaginatedResult<ImgwireImage>> {
     return this.unwrapPaginated("images.list", () =>
       this.api.imagesList(input?.limit, input?.page)
-    );
+    ).then((result) => ({
+      ...result,
+      data: result.data.map(extendImage)
+    }));
   }
 
   listPages(
     input: PaginationRequest = {}
-  ): AsyncGenerator<PaginatedResult<ImageSchema>, void, void> {
+  ): AsyncGenerator<PaginatedResult<ImgwireImage>, void, void> {
     return iteratePaginatedResults(
       {
         limit: input.limit,
@@ -97,7 +108,7 @@ export class ImagesResource extends BaseResource {
 
   listAll(
     input: PaginationRequest = {}
-  ): AsyncGenerator<ImageSchema, void, void> {
+  ): AsyncGenerator<ImgwireImage, void, void> {
     return iteratePaginatedItems(
       {
         limit: input.limit,
@@ -107,10 +118,10 @@ export class ImagesResource extends BaseResource {
     );
   }
 
-  retrieve(imageId: string): Promise<ImageSchema> {
+  retrieve(imageId: string): Promise<ImgwireImage> {
     return this.unwrap("images.retrieve", () =>
       this.api.imagesRetrieve(imageId)
-    );
+    ).then(extendImage);
   }
 
   retrieveBulkDownloadJob(
@@ -121,7 +132,7 @@ export class ImagesResource extends BaseResource {
     );
   }
 
-  async upload(input: UploadInput): Promise<ImageSchema> {
+  async upload(input: UploadInput): Promise<ImgwireImage> {
     const resolved = await resolveUploadInput(input);
     const created = await this.create(
       {
@@ -141,4 +152,13 @@ export class ImagesResource extends BaseResource {
 
     return created.image;
   }
+}
+
+function extendStandardUploadResponse(
+  response: StandardUploadResponseSchema
+): StandardUploadResponse {
+  return {
+    ...response,
+    image: extendImage(response.image)
+  };
 }
