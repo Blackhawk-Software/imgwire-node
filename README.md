@@ -137,8 +137,9 @@ Upload from a `Buffer`:
 
 ```ts
 const image = await client.images.upload({
-  file: Buffer.from("hello"),
-  fileName: "hello.txt"
+  file: imageBuffer,
+  fileName: "hero.png",
+  mimeType: "image/png"
 });
 ```
 
@@ -159,9 +160,10 @@ Upload from a generic `Readable` stream:
 import { Readable } from "node:stream";
 
 const image = await client.images.upload({
-  file: Readable.from("streamed payload"),
-  fileName: "payload.txt",
-  contentLength: "streamed payload".length
+  file: Readable.from(imageBuffer),
+  fileName: "hero.png",
+  mimeType: "image/png",
+  contentLength: imageBuffer.length
 });
 ```
 
@@ -231,7 +233,7 @@ Example:
 
 ```ts
 const created = await client.corsOrigins.create({
-  pattern: "https://app.example.com"
+  pattern: "app.example.com"
 });
 
 const origins = await client.corsOrigins.list({
@@ -240,7 +242,7 @@ const origins = await client.corsOrigins.list({
 });
 
 await client.corsOrigins.update(created.id, {
-  pattern: "https://admin.example.com"
+  pattern: "dashboard.example.com"
 });
 
 for await (const origin of client.corsOrigins.listAll({ limit: 50 })) {
