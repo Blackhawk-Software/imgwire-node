@@ -116,29 +116,43 @@ async function runOpenApiGenerator(
   inputPath: string,
   outputDir: string
 ): Promise<void> {
+  const generatorArgs = [
+    "generate",
+    "-g",
+    "typescript-node",
+    "-i",
+    inputPath,
+    "-o",
+    outputDir,
+    "--additional-properties",
+    [
+      "supportsES6=true",
+      "typescriptThreePlus=true",
+      "useSingleRequestParameter=true",
+      "modelPropertyNaming=original",
+      "enumPropertyNaming=original",
+      "npmName=@imgwire/node"
+    ].join(",")
+  ];
   const generatorJarPath = await resolveOpenApiGeneratorJarPath();
 
+  if (generatorJarPath) {
+    await execFileAsync(
+      "java",
+      ["-jar", generatorJarPath, ...generatorArgs],
+      {
+        cwd: REPO_ROOT,
+        env: process.env
+      }
+    );
+    return;
+  }
+
   await execFileAsync(
-    "java",
+    process.execPath,
     [
-      "-jar",
-      generatorJarPath,
-      "generate",
-      "-g",
-      "typescript-node",
-      "-i",
-      inputPath,
-      "-o",
-      outputDir,
-      "--additional-properties",
-      [
-        "supportsES6=true",
-        "typescriptThreePlus=true",
-        "useSingleRequestParameter=true",
-        "modelPropertyNaming=original",
-        "enumPropertyNaming=original",
-        "npmName=@imgwire/node"
-      ].join(",")
+      resolve(REPO_ROOT, "node_modules/@openapitools/openapi-generator-cli/main.js"),
+      ...generatorArgs
     ],
     {
       cwd: REPO_ROOT,
@@ -147,7 +161,7 @@ async function runOpenApiGenerator(
   );
 }
 
-async function resolveOpenApiGeneratorJarPath(): Promise<string> {
+async function resolveOpenApiGeneratorJarPath(): Promise<string | null> {
   const candidates = [
     process.env.OPENAPI_GENERATOR_JAR,
     resolve(
@@ -169,7 +183,5 @@ async function resolveOpenApiGeneratorJarPath(): Promise<string> {
     }
   }
 
-  throw new Error(
-    `Unable to find openapi-generator-cli ${OPENAPI_GENERATOR_VERSION} jar.`
-  );
+  return null;
 }
