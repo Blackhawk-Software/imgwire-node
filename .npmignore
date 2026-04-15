@@ -1,0 +1,9 @@
+src/
+scripts/
+test/
+.github/
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+openapitools.json
+openapi/.sdk.openapi.generator.json
