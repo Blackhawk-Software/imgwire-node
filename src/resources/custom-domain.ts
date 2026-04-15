@@ -22,7 +22,9 @@ export class CustomDomainResource extends BaseResource {
   }
 
   delete(): Promise<Record<string, string | null>> {
-    return this.unwrap("customDomain.delete", () => this.api.customDomainDelete());
+    return this.unwrap("customDomain.delete", () =>
+      this.api.customDomainDelete()
+    );
   }
 
   retrieve(): Promise<CustomDomainSchema> {

@@ -21,8 +21,16 @@ export class ImgwireClient {
       retryDelayMs: options.retryDelayMs
     };
 
-    this.corsOrigins = new CorsOriginsResource(baseUrl, options.apiKey, context);
-    this.customDomain = new CustomDomainResource(baseUrl, options.apiKey, context);
+    this.corsOrigins = new CorsOriginsResource(
+      baseUrl,
+      options.apiKey,
+      context
+    );
+    this.customDomain = new CustomDomainResource(
+      baseUrl,
+      options.apiKey,
+      context
+    );
     this.images = new ImagesResource(options, baseUrl, options.apiKey, context);
     this.metrics = new MetricsResource(baseUrl, options.apiKey, context);
   }

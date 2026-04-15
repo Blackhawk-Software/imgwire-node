@@ -1,7 +1,10 @@
 import type http from "node:http";
 
 import type { RetryOptions, ImgwireLogger } from "../client/types.ts";
-import { toPaginatedResult, type PaginatedResult } from "../pagination/index.ts";
+import {
+  toPaginatedResult,
+  type PaginatedResult
+} from "../pagination/index.ts";
 import { withRetry } from "../http/retry.ts";
 
 export type ApiClass = new (basePath?: string) => {

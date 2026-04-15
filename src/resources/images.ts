@@ -33,7 +33,9 @@ export class ImagesResource extends BaseResource {
   bulkDelete(
     input: BulkDeleteImagesSchema
   ): Promise<Record<string, string | null>> {
-    return this.unwrap("images.bulkDelete", () => this.api.imagesBulkDelete(input));
+    return this.unwrap("images.bulkDelete", () =>
+      this.api.imagesBulkDelete(input)
+    );
   }
 
   create(
@@ -75,10 +77,14 @@ export class ImagesResource extends BaseResource {
   }
 
   retrieve(imageId: string): Promise<ImageSchema> {
-    return this.unwrap("images.retrieve", () => this.api.imagesRetrieve(imageId));
+    return this.unwrap("images.retrieve", () =>
+      this.api.imagesRetrieve(imageId)
+    );
   }
 
-  retrieveBulkDownloadJob(imageDownloadJobId: string): Promise<ImageDownloadJobSchema> {
+  retrieveBulkDownloadJob(
+    imageDownloadJobId: string
+  ): Promise<ImageDownloadJobSchema> {
     return this.unwrap("images.retrieveBulkDownloadJob", () =>
       this.api.imagesRetrieveBulkDownloadJob(imageDownloadJobId)
     );

@@ -13,18 +13,24 @@ export async function resolveUploadInput(
       contentLength: input.contentLength ?? input.file.byteLength,
       fileName: input.fileName ?? "upload.bin",
       mimeType: normalizeMimeType(input.mimeType),
-      metadata: buildMetadata(input, input.contentLength ?? input.file.byteLength)
+      metadata: buildMetadata(
+        input,
+        input.contentLength ?? input.file.byteLength
+      )
     };
   }
 
   if (isFsReadStream(input.file)) {
-    const filePath = typeof input.file.path === "string" ? input.file.path : null;
+    const filePath =
+      typeof input.file.path === "string" ? input.file.path : null;
     const stats = filePath ? await stat(filePath) : null;
 
     return {
       body: input.file,
-      contentLength: input.contentLength ?? stats?.size ?? requiredContentLength(),
-      fileName: input.fileName ?? (filePath ? basename(filePath) : "upload.bin"),
+      contentLength:
+        input.contentLength ?? stats?.size ?? requiredContentLength(),
+      fileName:
+        input.fileName ?? (filePath ? basename(filePath) : "upload.bin"),
       mimeType: normalizeMimeType(input.mimeType),
       metadata: buildMetadata(
         input,

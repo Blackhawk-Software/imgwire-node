@@ -91,7 +91,10 @@ describe("ImgwireClient", () => {
   it("uploads a Buffer through the standard upload workflow", async () => {
     const requests: Array<{ method: string; url: string; body: string }> = [];
     const server = await withServer(async (request, response) => {
-      if (request.method === "POST" && request.url === "/api/v1/images/standard_upload") {
+      if (
+        request.method === "POST" &&
+        request.url === "/api/v1/images/standard_upload"
+      ) {
         requests.push({
           body: await readRequestBody(request),
           method: request.method,
@@ -158,8 +161,8 @@ describe("ImgwireClient", () => {
 
     expect(image.id).toBe("img_123");
     expect(requests).toHaveLength(2);
-    expect(requests[0]?.body).toContain("\"file_name\":\"hero.png\"");
-    expect(requests[0]?.body).toContain("\"content_length\":4");
+    expect(requests[0]?.body).toContain('"file_name":"hero.png"');
+    expect(requests[0]?.body).toContain('"content_length":4');
     expect(requests[1]).toEqual({
       body: "data",
       method: "PUT",
@@ -170,7 +173,10 @@ describe("ImgwireClient", () => {
   it("supports fs streams and generic readable streams for uploads", async () => {
     const uploadBodies: string[] = [];
     const server = await withServer(async (request, response) => {
-      if (request.method === "POST" && request.url === "/api/v1/images/standard_upload") {
+      if (
+        request.method === "POST" &&
+        request.url === "/api/v1/images/standard_upload"
+      ) {
         response.statusCode = 200;
         response.setHeader("Content-Type", "application/json");
         response.end(

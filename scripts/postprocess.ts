@@ -39,9 +39,9 @@ export async function runPostprocess(options?: {
   await writeFile(
     resolve(generatedDir, "index.ts"),
     [
-      "export * from \"./api\";",
-      "export * from \"./api/apis\";",
-      "export * from \"./model/models\";"
+      'export * from "./api";',
+      'export * from "./api/apis";',
+      'export * from "./model/models";'
     ].join("\n") + "\n",
     "utf8"
   );
