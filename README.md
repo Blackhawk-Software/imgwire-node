@@ -1,5 +1,9 @@
 # `@imgwire/node`
 
+[![npm version](https://img.shields.io/npm/v/%40imgwire%2Fnode)](https://www.npmjs.com/package/@imgwire/node)
+[![CI](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/ci.yml/badge.svg)](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/ci.yml)
+[![Release](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/release.yml/badge.svg)](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/release.yml)
+
 `@imgwire/node` is the server-first TypeScript SDK for the imgwire API.
 
 Use it in backend services, jobs, and server runtimes to authenticate with a Server API Key, upload files from Node streams or buffers, manage server-side resources, and call the imgwire API without hand-writing request plumbing.
