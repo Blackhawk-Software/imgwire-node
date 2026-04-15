@@ -367,8 +367,10 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.24.2.tgz#34aa0b52d0fbb1a654b596acfa595f0c7b77a77b"
   integrity sha512-7VTgWzgMGvup6aSqDPLiW5zHaxYJGTO4OokMjIlrCtf+VpEL+cXKtCvg723iguPYI5oaUNdS+/V7OU2gvXVWEg==
 
-"@imgwire/codegen-core@file:../imgwire-codegen-core":
+"@imgwire/codegen-core@0.1.2":
   version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@imgwire/codegen-core/-/codegen-core-0.1.2.tgz#da694778895166b66630fd0564c3bf97fd3d1e29"
+  integrity sha512-Adqcphls1sSz6VQaI2FEMy+nGM7jUb7Hmb7vH1Fa+3gTYZig/SbeGC9+RIVMSnlltoskl/u6E4ekRc5YTtAB4A==
 
 "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.13"
