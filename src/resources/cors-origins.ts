@@ -2,7 +2,14 @@ import type { CorsOriginCreateSchema } from "../../generated/model/corsOriginCre
 import type { CorsOriginSchema } from "../../generated/model/corsOriginSchema.ts";
 import type { CorsOriginUpdateSchema } from "../../generated/model/corsOriginUpdateSchema.ts";
 import { CorsOriginsApi } from "../../generated/api/corsOriginsApi.ts";
-import type { PaginatedResult } from "../pagination/types.ts";
+import {
+  iteratePaginatedItems,
+  iteratePaginatedResults
+} from "../pagination/page-iterator.ts";
+import type {
+  PaginatedResult,
+  PaginationRequest
+} from "../pagination/types.ts";
 
 import { BaseResource, type ResourceContext } from "./shared.ts";
 
@@ -35,6 +42,30 @@ export class CorsOriginsResource extends BaseResource {
   }): Promise<PaginatedResult<CorsOriginSchema>> {
     return this.unwrapPaginated("corsOrigins.list", () =>
       this.api.corsOriginsList(input?.limit, input?.page)
+    );
+  }
+
+  listPages(
+    input: PaginationRequest = {}
+  ): AsyncGenerator<PaginatedResult<CorsOriginSchema>, void, void> {
+    return iteratePaginatedResults(
+      {
+        limit: input.limit,
+        page: input.page ?? 1
+      },
+      (params) => this.list(params)
+    );
+  }
+
+  listAll(
+    input: PaginationRequest = {}
+  ): AsyncGenerator<CorsOriginSchema, void, void> {
+    return iteratePaginatedItems(
+      {
+        limit: input.limit,
+        page: input.page ?? 1
+      },
+      (params) => this.list(params)
     );
   }
 

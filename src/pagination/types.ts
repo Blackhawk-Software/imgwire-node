@@ -10,3 +10,8 @@ export type PaginatedResult<T> = {
   data: T[];
   pagination: PaginationInfo;
 };
+
+export type PaginationRequest = {
+  limit?: number;
+  page?: number;
+};

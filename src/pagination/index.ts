@@ -2,7 +2,12 @@ import type { IncomingHttpHeaders } from "node:http";
 
 import type { PaginatedResult, PaginationInfo } from "./types.ts";
 
-export type { PaginatedResult, PaginationInfo } from "./types.ts";
+export * from "./page-iterator.ts";
+export type {
+  PaginatedResult,
+  PaginationInfo,
+  PaginationRequest
+} from "./types.ts";
 
 export function toPaginatedResult<T>(
   data: T[],

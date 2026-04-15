@@ -76,6 +76,8 @@ Image operations and upload workflows.
 Supported methods:
 
 - `list({ limit, page })`
+- `listPages({ limit, page })`
+- `listAll({ limit, page })`
 - `retrieve(imageId)`
 - `create(body, { uploadToken? })`
 - `upload({ file, fileName?, mimeType?, contentLength?, ... })`
@@ -95,6 +97,22 @@ const result = await client.images.list({
 
 console.log(result.data);
 console.log(result.pagination.totalCount);
+```
+
+Iterate page-by-page:
+
+```ts
+for await (const page of client.images.listPages({ limit: 100 })) {
+  console.log(page.pagination.page, page.data.length);
+}
+```
+
+Iterate every image record:
+
+```ts
+for await (const image of client.images.listAll({ limit: 100 })) {
+  console.log(image.id);
+}
 ```
 
 Retrieve an image by id:
@@ -202,6 +220,8 @@ CORS origin management for server-controlled environments.
 Supported methods:
 
 - `list({ limit, page })`
+- `listPages({ limit, page })`
+- `listAll({ limit, page })`
 - `create({ pattern })`
 - `retrieve(corsOriginId)`
 - `update(corsOriginId, { pattern })`
@@ -222,6 +242,10 @@ const origins = await client.corsOrigins.list({
 await client.corsOrigins.update(created.id, {
   pattern: "https://admin.example.com"
 });
+
+for await (const origin of client.corsOrigins.listAll({ limit: 50 })) {
+  console.log(origin.pattern);
+}
 ```
 
 ### `client.metrics`
@@ -256,6 +280,8 @@ const stats = await client.metrics.getStats({
 ## Response Shape Notes
 
 - List endpoints exposed through handwritten wrappers return `{ data, pagination }`.
+- `listPages()` yields paginated result objects across pages.
+- `listAll()` yields individual items across every page.
 - Single-resource methods return the deserialized model object from the generated client.
 - Upload helpers return the created `ImageSchema` after the presigned upload completes.
 

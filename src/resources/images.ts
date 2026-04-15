@@ -6,7 +6,14 @@ import type { StandardUploadCreateSchema } from "../../generated/model/standardU
 import type { StandardUploadResponseSchema } from "../../generated/model/standardUploadResponseSchema.ts";
 import { ImagesApi } from "../../generated/api/imagesApi.ts";
 import type { UploadTokenCreateResponseSchema } from "../../generated/model/uploadTokenCreateResponseSchema.ts";
-import type { PaginatedResult } from "../pagination/types.ts";
+import {
+  iteratePaginatedItems,
+  iteratePaginatedResults
+} from "../pagination/page-iterator.ts";
+import type {
+  PaginatedResult,
+  PaginationRequest
+} from "../pagination/types.ts";
 import { putUpload } from "../uploads/put-upload.ts";
 import { resolveUploadInput } from "../uploads/resolve-upload-input.ts";
 import type { UploadInput } from "../uploads/types.ts";
@@ -73,6 +80,30 @@ export class ImagesResource extends BaseResource {
   }): Promise<PaginatedResult<ImageSchema>> {
     return this.unwrapPaginated("images.list", () =>
       this.api.imagesList(input?.limit, input?.page)
+    );
+  }
+
+  listPages(
+    input: PaginationRequest = {}
+  ): AsyncGenerator<PaginatedResult<ImageSchema>, void, void> {
+    return iteratePaginatedResults(
+      {
+        limit: input.limit,
+        page: input.page ?? 1
+      },
+      (params) => this.list(params)
+    );
+  }
+
+  listAll(
+    input: PaginationRequest = {}
+  ): AsyncGenerator<ImageSchema, void, void> {
+    return iteratePaginatedItems(
+      {
+        limit: input.limit,
+        page: input.page ?? 1
+      },
+      (params) => this.list(params)
     );
   }
 
