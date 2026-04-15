@@ -1,0 +1,64 @@
+{
+  "name": "@imgwire/node",
+  "version": "0.1.0",
+  "description": "Node.js-first TypeScript SDK for the imgwire API.",
+  "license": "MIT",
+  "packageManager": "yarn@1.22.22",
+  "type": "module",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Blackhawk-Software/imgwire-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Blackhawk-Software/imgwire-node/issues"
+  },
+  "homepage": "https://github.com/Blackhawk-Software/imgwire-node#readme",
+  "files": [
+    "dist",
+    "generated",
+    "openapi/raw.openapi.json",
+    "openapi/sdk.openapi.json",
+    "CODEGEN_VERSION",
+    "README.md"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "generate": "tsx scripts/generate.ts",
+    "postprocess": "tsx scripts/postprocess.ts",
+    "verify-generated": "tsx scripts/verify-generated.ts",
+    "format": "prettier --write .",
+    "build": "tsup",
+    "release:prepare": "node scripts/release.mjs prepare",
+    "release:verify-tag": "node scripts/release.mjs verify-tag",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "ci": "yarn verify-generated && yarn typecheck && yarn test && yarn build"
+  },
+  "dependencies": {
+    "request": "2.88.2"
+  },
+  "devDependencies": {
+    "@imgwire/codegen-core": "file:../imgwire-codegen-core",
+    "@openapitools/openapi-generator-cli": "2.13.4",
+    "@types/node": "24.9.1",
+    "@types/request": "2.48.12",
+    "prettier": "3.6.2",
+    "tsup": "8.3.5",
+    "tsx": "4.19.2",
+    "typescript": "5.9.3",
+    "vitest": "2.1.8"
+  }
+}
