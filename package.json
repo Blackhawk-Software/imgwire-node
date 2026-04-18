@@ -1,6 +1,6 @@
 {
   "name": "@imgwire/node",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Node.js-first TypeScript SDK for the imgwire API.",
   "license": "MIT",
   "packageManager": "yarn@1.22.22",

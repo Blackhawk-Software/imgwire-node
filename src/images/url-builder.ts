@@ -210,7 +210,9 @@ function appendPresetToPath(pathname: string, preset: ImageUrlPreset): string {
   const fileName = slashIndex >= 0 ? pathname.slice(slashIndex + 1) : pathname;
 
   if (fileName.length === 0) {
-    throw new Error("Cannot apply an image URL preset to a CDN url without a path.");
+    throw new Error(
+      "Cannot apply an image URL preset to a CDN url without a path."
+    );
   }
 
   return `${prefix}${fileName}@${preset}`;
