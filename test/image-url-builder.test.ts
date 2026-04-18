@@ -4,7 +4,8 @@ import { extendImage } from "../src/images/url-builder.ts";
 
 function makeImage() {
   return extendImage({
-    cdn_url: "https://cdn.imgwire.dev/example.jpg",
+    can_upload: true,
+    cdn_url: "https://cdn.imgwire.dev/example",
     created_at: new Date("2026-04-14T00:00:00Z"),
     custom_metadata: {},
     deleted_at: null,
@@ -15,6 +16,7 @@ function makeImage() {
     height: 100,
     id: "img_1",
     idempotency_key: null,
+    is_directly_deliverable: true,
     mime_type: "image/jpeg" as never,
     original_filename: "example.jpg",
     processed_metadata_at: null,
@@ -40,7 +42,7 @@ describe("extendImage", () => {
         w: 150
       })
     ).toBe(
-      "https://cdn.imgwire.dev/example.jpg@thumbnail?background=ffffff&height=150&rotate=90&width=150"
+      "https://cdn.imgwire.dev/example@thumbnail?background=ffffff&height=150&rotate=90&width=150"
     );
   });
 
@@ -52,7 +54,17 @@ describe("extendImage", () => {
         enlarge: false,
         strip_metadata: true
       })
-    ).toBe("https://cdn.imgwire.dev/example.jpg?strip_metadata=true");
+    ).toBe("https://cdn.imgwire.dev/example?strip_metadata=true");
+  });
+
+  it("accepts auto as an output format", () => {
+    const image = makeImage();
+
+    expect(
+      image.url({
+        format: "auto"
+      })
+    ).toBe("https://cdn.imgwire.dev/example?format=auto");
   });
 
   it("rejects duplicate aliases for the same canonical rule", () => {

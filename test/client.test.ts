@@ -169,9 +169,7 @@ describe("ImgwireClient", () => {
           width: 150,
           height: 150
         })
-      ).toBe(
-        "https://cdn.imgwire.dev/example.png@thumbnail?height=150&width=150"
-      );
+      ).toBe("https://cdn.imgwire.dev/example@thumbnail?height=150&width=150");
       expect(uploadToken.id).toBe("ut_123");
       expect(uploadToken.token).toBe("ut_token_123");
       expect(downloadJob.id).toBe("job_123");
@@ -231,7 +229,7 @@ describe("ImgwireClient", () => {
         created.image.url({
           rotate: 90
         })
-      ).toBe("https://cdn.imgwire.dev/example.png?rotate=90");
+      ).toBe("https://cdn.imgwire.dev/example?rotate=90");
     });
 
     it("uploads a Buffer through the standard upload workflow", async () => {
@@ -290,7 +288,7 @@ describe("ImgwireClient", () => {
           preset: "thumbnail",
           rotate: 90
         })
-      ).toBe("https://cdn.imgwire.dev/example.png@thumbnail?rotate=90");
+      ).toBe("https://cdn.imgwire.dev/example@thumbnail?rotate=90");
       expect(requests).toHaveLength(2);
       expect(requests[0]?.body).toContain('"file_name":"hero.png"');
       expect(requests[0]?.body).toContain('"content_length":4');
@@ -614,7 +612,8 @@ describe("ImgwireClient", () => {
 
 function imageResponse() {
   return {
-    cdn_url: "https://cdn.imgwire.dev/example.png",
+    can_upload: true,
+    cdn_url: "https://cdn.imgwire.dev/example",
     created_at: "2026-04-14T00:00:00Z",
     custom_metadata: {},
     deleted_at: null,
@@ -625,6 +624,7 @@ function imageResponse() {
     height: 1,
     id: "img_123",
     idempotency_key: null,
+    is_directly_deliverable: true,
     mime_type: "image/png",
     original_filename: "hero.png",
     processed_metadata_at: null,

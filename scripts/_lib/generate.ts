@@ -137,21 +137,20 @@ async function runOpenApiGenerator(
   const generatorJarPath = await resolveOpenApiGeneratorJarPath();
 
   if (generatorJarPath) {
-    await execFileAsync(
-      "java",
-      ["-jar", generatorJarPath, ...generatorArgs],
-      {
-        cwd: REPO_ROOT,
-        env: process.env
-      }
-    );
+    await execFileAsync("java", ["-jar", generatorJarPath, ...generatorArgs], {
+      cwd: REPO_ROOT,
+      env: process.env
+    });
     return;
   }
 
   await execFileAsync(
     process.execPath,
     [
-      resolve(REPO_ROOT, "node_modules/@openapitools/openapi-generator-cli/main.js"),
+      resolve(
+        REPO_ROOT,
+        "node_modules/@openapitools/openapi-generator-cli/main.js"
+      ),
       ...generatorArgs
     ],
     {

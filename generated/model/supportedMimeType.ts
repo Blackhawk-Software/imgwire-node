@@ -17,8 +17,13 @@ import { RequestFile } from './models';
 */
 export enum SupportedMimeType {
     image_jpeg = <any> 'image/jpeg',
+    image_jxl = <any> 'image/jxl',
     image_png = <any> 'image/png',
     image_webp = <any> 'image/webp',
     image_avif = <any> 'image/avif',
-    image_gif = <any> 'image/gif'
+    image_gif = <any> 'image/gif',
+    image_vnd_microsoft_icon = <any> 'image/vnd.microsoft.icon',
+    image_heic = <any> 'image/heic',
+    image_bmp = <any> 'image/bmp',
+    image_tiff = <any> 'image/tiff'
 }

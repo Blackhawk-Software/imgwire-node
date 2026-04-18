@@ -16,6 +16,7 @@ import { ImageStatus } from './imageStatus';
 import { SupportedMimeType } from './supportedMimeType';
 
 export class ImageSchema {
+    'can_upload': boolean;
     'cdn_url': string;
     'created_at': Date;
     'custom_metadata': { [key: string]: CustomMetadataValue; };
@@ -27,6 +28,7 @@ export class ImageSchema {
     'height': number;
     'id': string;
     'idempotency_key': string | null;
+    'is_directly_deliverable': boolean;
     'mime_type': SupportedMimeType;
     'original_filename': string;
     'processed_metadata_at': Date | null;
@@ -40,6 +42,11 @@ export class ImageSchema {
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
+        {
+            "name": "can_upload",
+            "baseName": "can_upload",
+            "type": "boolean"
+        },
         {
             "name": "cdn_url",
             "baseName": "cdn_url",
@@ -94,6 +101,11 @@ export class ImageSchema {
             "name": "idempotency_key",
             "baseName": "idempotency_key",
             "type": "string"
+        },
+        {
+            "name": "is_directly_deliverable",
+            "baseName": "is_directly_deliverable",
+            "type": "boolean"
         },
         {
             "name": "mime_type",

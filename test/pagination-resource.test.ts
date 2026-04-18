@@ -91,7 +91,8 @@ describe("paginated resource iterators", () => {
 
 function imageResponse(id: string) {
   return {
-    cdn_url: `https://cdn.imgwire.dev/${id}.png`,
+    can_upload: true,
+    cdn_url: `https://cdn.imgwire.dev/${id}`,
     created_at: "2026-04-14T00:00:00Z",
     custom_metadata: {},
     deleted_at: null,
@@ -102,6 +103,7 @@ function imageResponse(id: string) {
     height: 1,
     id,
     idempotency_key: null,
+    is_directly_deliverable: true,
     mime_type: "image/png",
     original_filename: `${id}.png`,
     processed_metadata_at: null,
