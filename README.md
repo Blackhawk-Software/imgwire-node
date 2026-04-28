@@ -1,12 +1,18 @@
+![imgwire.dev Logo](https://cdn.imgwire.dev/6b024480-a5ac-426d-b539-2e4fccc4c6ac/26f80c13-48bd-4bb9-866e-5e9392b11a6a/4ba5fe50-433b-40db-a847-938d2081c21a?w=280&quality=80)
+
 # `@imgwire/node`
 
 [![npm version](https://img.shields.io/npm/v/%40imgwire%2Fnode)](https://www.npmjs.com/package/@imgwire/node)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/ci.yml/badge.svg)](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/ci.yml)
 [![Release](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/release.yml/badge.svg)](https://github.com/Blackhawk-Software/imgwire-node/actions/workflows/release.yml)
 
 `@imgwire/node` is the server-first TypeScript SDK for the imgwire API.
 
 Use it in backend services, jobs, and server runtimes to authenticate with a Server API Key, upload files from Node streams or buffers, manage server-side resources, and call the imgwire API without hand-writing request plumbing.
+
+> [!TIP]
+> Obtain an API key by signing up at [imgwire.dev](https://imgwire.dev). Read the full API & SDK documentation [here](https://docs.imgwire.dev/guides/backend-quickstart).
 
 ## Installation
 
