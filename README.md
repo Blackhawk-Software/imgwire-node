@@ -86,6 +86,31 @@ Image operations and upload workflows.
 
 Returned image records expose `image.url(...)` so your backend can generate imgwire transformation URLs without reimplementing CDN path and query rules.
 
+`image.url(...)` supports the full imgwire URL transformation rulespec, including canonical names and aliases. Invalid transform values are omitted from the generated URL, and multi-field transforms can be passed as strings or objects:
+
+```ts
+const transformedUrl = image.url({
+  width: 1200,
+  height: 800,
+  format: "webp",
+  gradient: {
+    colors: ["#111111", "#eeeeee"],
+    angle: 180,
+    opacity: 0.25,
+    blend: "overlay"
+  },
+  watermark_url: "https://example.com/logo.png",
+  watermark_position: {
+    gravity: "southeast",
+    x: -24,
+    y: -24,
+    opacity: 0.85
+  }
+});
+```
+
+Raw HTTPS values passed to `watermark_url` are base64-encoded by the SDK before they are added to the URL.
+
 Supported methods:
 
 - `list({ limit, page })`
