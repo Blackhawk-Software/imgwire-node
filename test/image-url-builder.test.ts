@@ -77,6 +77,31 @@ describe("extendImage", () => {
     ).toBe("https://cdn.imgwire.dev/example?format=auto");
   });
 
+  it("accepts automatic quality, progressive, and chroma subsampling values", () => {
+    const image = makeImage();
+    const params = searchParams(
+      image.url({
+        quality: "auto",
+        progressive: "auto",
+        chroma_subsampling: "4:2:2"
+      })
+    );
+
+    expect(params.get("quality")).toBe("auto");
+    expect(params.get("progressive")).toBe("auto");
+    expect(params.get("chroma_subsampling")).toBe("4:2:2");
+
+    const booleanParams = searchParams(
+      image.url({
+        progressive: false,
+        chroma_subsampling: "4:4:4"
+      })
+    );
+
+    expect(booleanParams.get("progressive")).toBe("false");
+    expect(booleanParams.get("chroma_subsampling")).toBe("4:4:4");
+  });
+
   it("rejects duplicate aliases for the same canonical rule", () => {
     const image = makeImage();
 
@@ -93,8 +118,10 @@ describe("extendImage", () => {
 
     expect(
       image.url({
+        chroma_subsampling: "4:2:0" as never,
         format: "bmp" as never,
         pixelate: 1,
+        progressive: "maybe" as never,
         quality: 0,
         rotate: 45,
         width: 600
@@ -221,6 +248,7 @@ describe("extendImage", () => {
         background_alpha: 0.5,
         blur: 1.5,
         brightness: 1.1,
+        chroma_subsampling: "auto",
         color_profile: "srgb",
         colorize: "#112233",
         contrast: { multiplier: 1.2, pivot: 128 },
@@ -249,6 +277,7 @@ describe("extendImage", () => {
         normalize: "1:99",
         padding: { top: 1, right: 2, bottom: 3, left: 4 },
         pixelate: 4,
+        progressive: true,
         quality: 80,
         resizing_algorithm: "lanczos3",
         resizing_type: "fit",
@@ -278,6 +307,7 @@ describe("extendImage", () => {
       "background_alpha",
       "blur",
       "brightness",
+      "chroma_subsampling",
       "color_profile",
       "colorize",
       "contrast",
@@ -303,6 +333,7 @@ describe("extendImage", () => {
       "normalize",
       "padding",
       "pixelate",
+      "progressive",
       "quality",
       "resizing_algorithm",
       "resizing_type",

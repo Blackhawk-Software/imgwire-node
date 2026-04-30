@@ -77,12 +77,20 @@ export const IMAGE_URL_COLOR_PROFILES = [
   "preserve"
 ] as const;
 
+export const IMAGE_URL_CHROMA_SUBSAMPLING_VALUES = [
+  "4:4:4",
+  "4:2:2",
+  "auto"
+] as const;
+
 export type ImageUrlPreset = (typeof IMAGE_URL_PRESETS)[number];
 export type GravityType = (typeof IMAGE_URL_GRAVITY_TYPES)[number];
 export type ResizingType = (typeof IMAGE_URL_RESIZING_TYPES)[number];
 export type ResizingAlgorithm = (typeof IMAGE_URL_RESIZING_ALGORITHMS)[number];
 export type OutputFormat = (typeof IMAGE_URL_OUTPUT_FORMATS)[number];
 export type ColorProfile = (typeof IMAGE_URL_COLOR_PROFILES)[number];
+export type ChromaSubsampling =
+  (typeof IMAGE_URL_CHROMA_SUBSAMPLING_VALUES)[number];
 export type BooleanString =
   | "true"
   | "false"
@@ -96,6 +104,8 @@ export type BooleanString =
   | "off";
 export type BooleanLike = boolean | BooleanString;
 export type NumericValue = number | `${number}`;
+export type QualityValue = NumericValue | "auto";
+export type ProgressiveValue = BooleanLike | "auto";
 
 export type ImageUrlColor =
   | string
@@ -340,6 +350,7 @@ export type ImageUrlOptions = {
   c?: CropValue;
   col?: ImageUrlColor;
   color_profile?: ColorProfile;
+  chroma_subsampling?: ChromaSubsampling;
   colorize?: ImageUrlColor;
   contrast?: ContrastValue;
   co?: ContrastValue;
@@ -392,8 +403,9 @@ export type ImageUrlOptions = {
   pd?: PaddingValue;
   pix?: NumericValue;
   pixelate?: NumericValue;
-  q?: NumericValue;
-  quality?: NumericValue;
+  progressive?: ProgressiveValue;
+  q?: QualityValue;
+  quality?: QualityValue;
   ra?: ResizingAlgorithm;
   resizing_algorithm?: ResizingAlgorithm;
   resizing_type?: ResizingType;
@@ -439,6 +451,7 @@ type CanonicalTransformName =
   | "background_alpha"
   | "blur"
   | "brightness"
+  | "chroma_subsampling"
   | "color_profile"
   | "colorize"
   | "contrast"
@@ -464,6 +477,7 @@ type CanonicalTransformName =
   | "normalize"
   | "padding"
   | "pixelate"
+  | "progressive"
   | "quality"
   | "resizing_algorithm"
   | "resizing_type"
@@ -1163,10 +1177,38 @@ function parseBooleanTransformation(
 }
 
 function parseQuality(value: unknown, canonical: CanonicalTransformName) {
+  const raw = stringifyValue(value, canonical).trim().toLowerCase();
+  if (raw === "auto") {
+    return createTransformation(canonical, raw);
+  }
+
   return createTransformation(
     canonical,
-    String(parseInteger(value, canonical, { min: 1, max: 100 }))
+    String(parseInteger(raw, canonical, { min: 1, max: 100 }))
   );
+}
+
+function parseProgressive(value: unknown, canonical: CanonicalTransformName) {
+  const raw = stringifyValue(value, canonical).trim().toLowerCase();
+  if (raw === "auto") {
+    return createTransformation(canonical, raw);
+  }
+
+  return createTransformation(
+    canonical,
+    parseBoolean(raw, canonical) ? "true" : "false"
+  );
+}
+
+function parseChromaSubsampling(
+  value: unknown,
+  canonical: CanonicalTransformName
+) {
+  const raw = stringifyValue(value, canonical).trim().toLowerCase();
+  if (!IMAGE_URL_CHROMA_SUBSAMPLING_VALUES.includes(raw as ChromaSubsampling)) {
+    throw invalidValue(canonical);
+  }
+  return createTransformation(canonical, raw);
 }
 
 function parseFormat(value: unknown, canonical: CanonicalTransformName) {
@@ -2040,6 +2082,11 @@ const RULES: Rule[] = [
     parse: parseColorProfile
   },
   {
+    canonical: "chroma_subsampling",
+    aliases: ["chroma_subsampling"],
+    parse: parseChromaSubsampling
+  },
+  {
     canonical: "colorize",
     aliases: ["col", "colorize"],
     parse: parseBackground
@@ -2099,6 +2146,11 @@ const RULES: Rule[] = [
   },
   { canonical: "padding", aliases: ["pd", "padding"], parse: parsePadding },
   { canonical: "pixelate", aliases: ["pix", "pixelate"], parse: parsePixelate },
+  {
+    canonical: "progressive",
+    aliases: ["progressive"],
+    parse: parseProgressive
+  },
   { canonical: "quality", aliases: ["q", "quality"], parse: parseQuality },
   {
     canonical: "resizing_algorithm",
