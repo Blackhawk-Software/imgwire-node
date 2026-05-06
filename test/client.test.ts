@@ -299,6 +299,75 @@ describe("ImgwireClient", () => {
       });
     });
 
+    it("uploads an image via a remote URL", async () => {
+      const requests: Array<{
+        body: string;
+        headers: Record<string, string | string[] | undefined>;
+        method: string;
+        url: string;
+      }> = [];
+      const server = await withServer(async (request, response) => {
+        requests.push({
+          body: await readRequestBody(request),
+          headers: request.headers,
+          method: request.method ?? "UNKNOWN",
+          url: request.url ?? ""
+        });
+
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "application/json");
+
+        if (
+          request.method === "POST" &&
+          request.url === "/api/v1/images/upload_via_url"
+        ) {
+          response.end(JSON.stringify(imageResponse()));
+          return;
+        }
+
+        response.statusCode = 404;
+        response.end("");
+      });
+      cleanup.push(server.close);
+
+      const client = new ImgwireClient({
+        apiKey: "sk_test",
+        baseUrl: server.origin
+      });
+
+      const image = await client.images.uploadViaUrl({
+        customMetadata: {
+          alt: "Hero",
+          rank: 1
+        },
+        fileName: "remote-hero.png",
+        idempotencyKey: "idem_123",
+        mimeType: "image/png",
+        purpose: "gallery",
+        url: new URL("https://assets.example.com/remote-hero.png")
+      });
+
+      expect(image.id).toBe("img_123");
+      expect(image.url({ width: 640 })).toBe(
+        "https://cdn.imgwire.dev/example?width=640"
+      );
+      expect(requests).toHaveLength(1);
+      expect(requests[0]?.headers.authorization).toBe("Bearer sk_test");
+      expect(requests[0]?.method).toBe("POST");
+      expect(requests[0]?.url).toBe("/api/v1/images/upload_via_url");
+      expect(JSON.parse(requests[0]?.body ?? "{}")).toEqual({
+        custom_metadata: {
+          alt: "Hero",
+          rank: 1
+        },
+        file_name: "remote-hero.png",
+        idempotency_key: "idem_123",
+        mime_type: "image/png",
+        purpose: "gallery",
+        url: "https://assets.example.com/remote-hero.png"
+      });
+    });
+
     it("supports fs streams and generic readable streams for uploads", async () => {
       const uploadBodies: string[] = [];
       const server = await withServer(async (request, response) => {

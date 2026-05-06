@@ -29,6 +29,7 @@ export * from './supportedMimeType';
 export * from './transferBytesDatasetPointSchema';
 export * from './transformationsDatasetPointSchema';
 export * from './uploadTokenCreateResponseSchema';
+export * from './uploadViaUrlCreateSchema';
 export * from './uploadsDatasetPointSchema';
 export * from './validationError';
 
@@ -74,6 +75,7 @@ import { SupportedMimeType } from './supportedMimeType';
 import { TransferBytesDatasetPointSchema } from './transferBytesDatasetPointSchema';
 import { TransformationsDatasetPointSchema } from './transformationsDatasetPointSchema';
 import { UploadTokenCreateResponseSchema } from './uploadTokenCreateResponseSchema';
+import { UploadViaUrlCreateSchema } from './uploadViaUrlCreateSchema';
 import { UploadsDatasetPointSchema } from './uploadsDatasetPointSchema';
 import { ValidationError } from './validationError';
 
@@ -122,6 +124,7 @@ let typeMap: {[index: string]: any} = {
     "TransferBytesDatasetPointSchema": TransferBytesDatasetPointSchema,
     "TransformationsDatasetPointSchema": TransformationsDatasetPointSchema,
     "UploadTokenCreateResponseSchema": UploadTokenCreateResponseSchema,
+    "UploadViaUrlCreateSchema": UploadViaUrlCreateSchema,
     "UploadsDatasetPointSchema": UploadsDatasetPointSchema,
     "ValidationError": ValidationError,
 }
@@ -198,6 +201,8 @@ export class ObjectSerializer {
                 transformedData.push(ObjectSerializer.serialize(datum, subType));
             }
             return transformedData;
+        } else if (type === "CustomMetadataValue") {
+            return data;
         } else if (startsWith(type, mapPrefix)) {
             let subType: string = type.slice(mapPrefix.length, -mapSuffix.length); // { [key: string]: Type; } => Type
             let transformedData: { [key: string]: any } = {};
@@ -253,6 +258,8 @@ export class ObjectSerializer {
                 transformedData.push(ObjectSerializer.deserialize(datum, subType));
             }
             return transformedData;
+        } else if (type === "CustomMetadataValue") {
+            return data;
         } else if (startsWith(type, mapPrefix)) {
             let subType: string = type.slice(mapPrefix.length, -mapSuffix.length); // { [key: string]: Type; } => Type
             let transformedData: { [key: string]: any } = {};

@@ -6,6 +6,7 @@ import type { StandardUploadCreateSchema } from "../../generated/model/standardU
 import type { StandardUploadResponseSchema } from "../../generated/model/standardUploadResponseSchema.ts";
 import { ImagesApi } from "../../generated/api/imagesApi.ts";
 import type { UploadTokenCreateResponseSchema } from "../../generated/model/uploadTokenCreateResponseSchema.ts";
+import type { UploadViaUrlCreateSchema } from "../../generated/model/uploadViaUrlCreateSchema.ts";
 import { extendImage, type ImgwireImage } from "../images/url-builder.ts";
 import {
   iteratePaginatedItems,
@@ -17,7 +18,7 @@ import type {
 } from "../pagination/types.ts";
 import { putUpload } from "../uploads/put-upload.ts";
 import { resolveUploadInput } from "../uploads/resolve-upload-input.ts";
-import type { UploadInput } from "../uploads/types.ts";
+import type { UploadInput, UploadViaUrlInput } from "../uploads/types.ts";
 import type { ImgwireClientOptions } from "../client/types.ts";
 
 import { BaseResource, type ResourceContext } from "./shared.ts";
@@ -152,6 +153,12 @@ export class ImagesResource extends BaseResource {
 
     return created.image;
   }
+
+  uploadViaUrl(input: UploadViaUrlInput): Promise<ImgwireImage> {
+    return this.unwrap("images.uploadViaUrl", () =>
+      this.api.imagesUploadViaUrl(toUploadViaUrlCreateSchema(input))
+    ).then(extendImage);
+  }
 }
 
 function extendStandardUploadResponse(
@@ -161,4 +168,23 @@ function extendStandardUploadResponse(
     ...response,
     image: extendImage(response.image)
   };
+}
+
+function toUploadViaUrlCreateSchema(
+  input: UploadViaUrlInput
+): UploadViaUrlCreateSchema {
+  return {
+    custom_metadata: input.customMetadata,
+    file_name: input.fileName,
+    idempotency_key: input.idempotencyKey,
+    mime_type: normalizeUploadViaUrlMimeType(input.mimeType),
+    purpose: input.purpose,
+    url: String(input.url)
+  };
+}
+
+function normalizeUploadViaUrlMimeType(
+  mimeType: UploadViaUrlInput["mimeType"]
+): UploadViaUrlCreateSchema["mime_type"] {
+  return mimeType as UploadViaUrlCreateSchema["mime_type"];
 }

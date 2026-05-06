@@ -119,6 +119,7 @@ Supported methods:
 - `retrieve(imageId)`
 - `create(body, { uploadToken? })`
 - `upload({ file, fileName?, mimeType?, contentLength?, ... })`
+- `uploadViaUrl({ url, fileName?, mimeType?, ... })`
 - `createUploadToken()`
 - `createBulkDownloadJob({ image_ids })`
 - `retrieveBulkDownloadJob(imageDownloadJobId)`
@@ -215,6 +216,19 @@ const image = await client.images.upload({
   fileName: "hero.png",
   mimeType: "image/png",
   contentLength: imageBuffer.length
+});
+```
+
+Upload from a remote URL:
+
+```ts
+const image = await client.images.uploadViaUrl({
+  url: "https://assets.example.com/hero.jpg",
+  fileName: "hero.jpg",
+  mimeType: "image/jpeg",
+  customMetadata: {
+    source: "import"
+  }
 });
 ```
 
@@ -336,7 +350,7 @@ const stats = await client.metrics.getStats({
 - `listPages()` yields paginated result objects across pages.
 - `listAll()` yields individual items across every page.
 - Image-returning methods return image records extended with `url(...)` for transformation URL generation.
-- Upload helpers return the created image record after the presigned upload completes.
+- Upload helpers return the created image record when the upload workflow completes.
 
 ## Development
 
